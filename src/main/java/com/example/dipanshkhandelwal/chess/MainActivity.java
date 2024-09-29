@@ -602,29 +602,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         } else {
                             if (Board[i][j].getPiece().isWhite() != Board[X][Y].getPiece().isWhite()) {
-                                if (Board[i][j].getPiece().isWhite()) {
-                                    int SizeOfList = ListKing.size();
-                                    for (int x2 = 0; x2 < SizeOfList; x2++) {
-                                        int XKing = ListKing.get(x2).getX();
-                                        int YKing = ListKing.get(x2).getY();
+                                int koef = Board[i][j].getPiece().isWhite() ? -1 : 1;
+                                int SizeOfList = ListKing.size();
+                                for (int x2 = 0; x2 < SizeOfList; x2++) {
+                                    int XKing = ListKing.get(x2).getX();
+                                    int YKing = ListKing.get(x2).getY();
 
-                                        if ((i-1 == XKing || i+1 == XKing) && j-1 == YKing) {
-                                            ListKing.remove(x2);
-                                            x2--;
-                                            SizeOfList--;
-                                        }
-                                    }
-                                } else {
-                                    int SizeOfList = ListKing.size();
-                                    for (int x2 = 0; x2 < SizeOfList; x2++) {
-                                        int XKing = ListKing.get(x2).getX();
-                                        int YKing = ListKing.get(x2).getY();
-
-                                        if ((i-1 == XKing || i+1 == XKing) && j+1 == YKing) {
-                                            ListKing.remove(x2);
-                                            x2--;
-                                            SizeOfList--;
-                                        }
+                                    if ((i-1 == XKing || i+1 == XKing) && j+koef == YKing) {
+                                        ListKing.remove(x2);
+                                        x2--;
+                                        SizeOfList--;
                                     }
                                 }
                             }
