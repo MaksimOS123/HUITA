@@ -29,6 +29,14 @@ public class Piece {
         return allowedMoves;
     }
 
+    public int getDrawableResource() {
+        return 0;
+    }
+
+    public boolean isFriend(Piece otherPiece) {
+        return isWhite() == otherPiece.isWhite();
+    }
+
     public boolean isWhite() {
         return white;
     }
