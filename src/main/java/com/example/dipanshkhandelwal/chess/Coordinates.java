@@ -1,8 +1,5 @@
 package com.example.dipanshkhandelwal.chess;
 
-/**
- * Created by DIPANSH KHANDELWAL on 03-06-2017
- */
 
 public class Coordinates {
     private int x;
@@ -27,5 +24,9 @@ public class Coordinates {
 
     void setY(int y) {
         this.y = y;
+    }
+
+    public boolean sumIsEven() {
+        return (x + y) % 2 == 0
     }
 }

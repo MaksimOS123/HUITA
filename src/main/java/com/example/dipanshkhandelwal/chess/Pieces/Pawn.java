@@ -16,6 +16,11 @@ public class Pawn extends Piece{
     }
 
     @Override
+    public int getDrawableResource() {
+        return isWhite() ? R.drawable.wpawn : R.drawable.bpawn
+    }
+
+    @Override
     public ArrayList<Coordinates> AllowedMoves(Coordinates coordinates , Position[][] board){
 
         ArrayList<Coordinates> allowedMoves = new ArrayList<>();

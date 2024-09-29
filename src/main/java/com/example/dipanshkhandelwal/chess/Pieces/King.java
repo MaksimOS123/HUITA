@@ -16,6 +16,11 @@ public class King extends Piece {
     }
 
     @Override
+    public int getDrawableResource() {
+        return isWhite() ? R.drawable.wking : R.drawable.bking
+    }
+
+    @Override
     public ArrayList<Coordinates> AllowedMoves(Coordinates coordinates , Position[][] board){
         ArrayList<Coordinates> allowedMoves = new ArrayList<>();
         allowedMoves.clear();

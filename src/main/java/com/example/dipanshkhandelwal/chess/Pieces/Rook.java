@@ -16,6 +16,11 @@ public class Rook extends Piece{
     }
 
     @Override
+    public int getDrawableResource() {
+        return isWhite() ? R.drawable.wrook : R.drawable.brook
+    }
+
+    @Override
     public ArrayList<Coordinates> AllowedMoves(Coordinates coordinates , Position[][] board){
 
         ArrayList<Coordinates> allowedMoves = new ArrayList<>();

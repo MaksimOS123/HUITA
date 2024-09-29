@@ -16,6 +16,11 @@ public class Bishop extends Piece{
     }
 
     @Override
+    public int getDrawableResource() {
+        return isWhite() ? R.drawable.wbishop : R.drawable.bbishop
+    }
+
+    @Override
     public ArrayList<Coordinates> AllowedMoves(Coordinates coordinates , Position[][] board){
         ArrayList<Coordinates> allowedMoves = new ArrayList<>();
         Coordinates c;

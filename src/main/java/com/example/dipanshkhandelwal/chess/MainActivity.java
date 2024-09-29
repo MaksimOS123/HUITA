@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public Boolean FirstPlayerTurn;
+    public Boolean WhitePlayerTurn; // гы-гы, нотка расизма
 
     private Class TAG = this.getClass();
     public ArrayList<Coordinates> listOfCoordinates = new ArrayList<>();
@@ -35,45 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ArrayList<Position[][]> LastMoves = new ArrayList<>();
     public LinearLayout pawn_choices;
     public int numberOfMoves;
-
-    Piece bKing;
-    Piece wKing;
-
-    Piece bQueen;
-    Piece wQueen;
-
-    Piece bKnight1;
-    Piece bKnight2;
-    Piece wKnight1;
-    Piece wKnight2;
-
-    Piece bRook1;
-    Piece bRook2;
-    Piece wRook1;
-    Piece wRook2;
-
-    Piece bBishop1;
-    Piece bBishop2;
-    Piece wBishop1;
-    Piece wBishop2;
-
-    Piece bPawn1;
-    Piece bPawn2;
-    Piece bPawn3;
-    Piece bPawn4;
-    Piece bPawn5;
-    Piece bPawn6;
-    Piece bPawn7;
-    Piece bPawn8;
-
-    Piece wPawn1;
-    Piece wPawn2;
-    Piece wPawn3;
-    Piece wPawn4;
-    Piece wPawn5;
-    Piece wPawn6;
-    Piece wPawn7;
-    Piece wPawn8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,87 +55,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initializeBoard() {
-        bKing = new King(false);
-        wKing = new King(true);
-
-        bQueen = new Queen(false);
-        wQueen = new Queen(true);
-
-        bRook1 = new Rook(false);
-        bRook2 = new Rook(false);
-        wRook1 = new Rook(true);
-        wRook2 = new Rook(true);
-
-        bKnight1 = new Knight(false);
-        bKnight2 = new Knight(false);
-        wKnight1 = new Knight(true);
-        wKnight2 = new Knight(true);
-
-        bBishop1 = new Bishop(false);
-        bBishop2 = new Bishop(false);
-        wBishop1 = new Bishop(true);
-        wBishop2 = new Bishop(true);
-
-        bPawn1 = new Pawn(false);
-        bPawn2 = new Pawn(false);
-        bPawn3 = new Pawn(false);
-        bPawn4 = new Pawn(false);
-        bPawn5 = new Pawn(false);
-        bPawn6 = new Pawn(false);
-        bPawn7 = new Pawn(false);
-        bPawn8 = new Pawn(false);
-
-        wPawn1 = new Pawn(true);
-        wPawn2 = new Pawn(true);
-        wPawn3 = new Pawn(true);
-        wPawn4 = new Pawn(true);
-        wPawn5 = new Pawn(true);
-        wPawn6 = new Pawn(true);
-        wPawn7 = new Pawn(true);
-        wPawn8 = new Pawn(true);
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Board[i][j] = new Position(null);
-                Board2[i][j] = new Position(null);
+        for (int board_col = 0; board_col < 8; board_col++) {
+            for (int board_row = 0; board_row < 8; board_row++) {
+                Board[board_col][board_row] = new Position(null);
+                Board2[board_col][board_row] = new Position(null);
             }
         }
 
-        Board[0][7].setPiece(wRook1);
-        Board[1][7].setPiece(wKnight1);
-        Board[2][7].setPiece(wBishop1);
-        Board[3][7].setPiece(wQueen);
-        Board[4][7].setPiece(wKing);
-        Board[5][7].setPiece(wBishop2);
-        Board[6][7].setPiece(wKnight2);
-        Board[7][7].setPiece(wRook2);
+        for(int board_row = 0; board_row < 8; board_row += 7) {
+            boolean isWhiteColor = board_row == 7;
+            Board[0][board_row].setPiece(new Rook(isWhiteColor));
+            Board[1][board_row].setPiece(new Knight(isWhiteColor));
+            Board[2][board_row].setPiece(new Bishop(isWhiteColor));
+            Board[3][board_row].setPiece(new Queen(isWhiteColor));
+            Board[4][board_row].setPiece(new King(isWhiteColor));
+            Board[5][board_row].setPiece(new Bishop(isWhiteColor));
+            Board[6][board_row].setPiece(new Knight(isWhiteColor));
+            Board[7][board_row].setPiece(new Rook(isWhiteColor);
+        }
 
-        Board[0][6].setPiece(wPawn1);
-        Board[1][6].setPiece(wPawn2);
-        Board[2][6].setPiece(wPawn3);
-        Board[3][6].setPiece(wPawn4);
-        Board[4][6].setPiece(wPawn5);
-        Board[5][6].setPiece(wPawn6);
-        Board[6][6].setPiece(wPawn7);
-        Board[7][6].setPiece(wPawn8);
-
-        Board[0][0].setPiece(bRook1);
-        Board[1][0].setPiece(bKnight1);
-        Board[2][0].setPiece(bBishop1);
-        Board[3][0].setPiece(bQueen);
-        Board[4][0].setPiece(bKing);
-        Board[5][0].setPiece(bBishop2);
-        Board[6][0].setPiece(bKnight2);
-        Board[7][0].setPiece(bRook2);
-
-        Board[0][1].setPiece(bPawn1);
-        Board[1][1].setPiece(bPawn2);
-        Board[2][1].setPiece(bPawn3);
-        Board[3][1].setPiece(bPawn4);
-        Board[4][1].setPiece(bPawn5);
-        Board[5][1].setPiece(bPawn6);
-        Board[6][1].setPiece(bPawn7);
-        Board[7][1].setPiece(bPawn8);
+        for(int board_col = 0; board_col < 8; board_col++)
+             Board[board_col][1].setPiece(new Pawn(false);
+             Board[board_col][6].setPiece(new Pawn(true);
 
         DisplayBoard[0][0] = (TextView) findViewById(R.id.R00);
         DisplayBoardBackground[0][0] = (TextView) findViewById(R.id.R000);
@@ -312,102 +214,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DisplayBoard[7][7] = (TextView) findViewById(R.id.R77);
         DisplayBoardBackground[7][7] = (TextView) findViewById(R.id.R077);
 
-        for(int g=0;g<8;g++){
-            for(int h=0;h<8;h++){
-                if(Board[g][h].getPiece()==null){
-                    Board2[g][h].setPiece(null);
-                }else{
-                    Board2[g][h].setPiece(Board[g][h].getPiece());
-                }
-            }
-        }
+        for(int board_row = 0; board_row < 8; board_row++)
+            for(int board_col = 0; board_col < 8; board_col++)
+                Board2[board_row][board_col].setPiece(Board[board_row][board_col].getPiece());
 
         numberOfMoves = 0;
         AnythingSelected = false;
-        FirstPlayerTurn = true;
-        setBoard();
+        WhitePlayerTurn = true;
+        drawBoard();
     }
 
-    private void setBoard() {
+    private void drawBoard() {
+        for (int board_col = 0; board_col < 8; board_col++) {
+            for (int board_row = 0; board_row < 8; board_row++) {
+                Piece pieceAtPosition = Board[board_col][board_row].getPiece();
+                int drawable_resource = pieceAtPosition != null ? pieceAtPosition.getDrawableResource() : 0;
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-
-                Piece p = Board[i][j].getPiece();
-                int x;
-
-                if (p != null) {
-                    if (p instanceof King) x = 0;
-                    else if (p instanceof Queen) x = 1;
-                    else if (p instanceof Rook) x = 2;
-                    else if (p instanceof Bishop) x = 3;
-                    else if (p instanceof Knight) x = 4;
-                    else if (p instanceof Pawn) x = 5;
-                    else x = 6;
-
-                    switch (x) {
-                        case 0:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wking);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.bking);
-                            }
-                            break;
-
-                        case 1:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wqueen);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.bqueen);
-                            }
-                            break;
-
-                        case 2:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wrook);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.brook);
-                            }
-                            break;
-
-                        case 3:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wbishop);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.bbishop);
-                            }
-                            break;
-
-                        case 4:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wknight);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.bknight);
-                            }
-                            break;
-
-                        case 5:
-                            if (p.isWhite()) {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.wpawn);
-                            } else {
-                                DisplayBoard[i][j].setBackgroundResource(R.drawable.bpawn);
-                            }
-                            break;
-
-                        default:
-
-                    }
-                }else{
-                    DisplayBoard[i][j].setBackgroundResource(0);
-                }
+                DisplayBoard[board_col][board_row].setBackgroundResource(drawable_resource);
             }
         }
         isKingInDanger();
     }
-
-    @Override
-    public void onClick(View v) {
-
+    
+    public void getClickedPos(View v) {
         switch (v.getId()) {
             case R.id.R00:
                 clickedPosition = new Coordinates(0, 0);
@@ -672,284 +501,223 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 clickedPosition.setY(7);
                 break;
         }
+    }
+    
+    @Override
+    public void onClick(View v) {
+        getClickedPos();
+        
+        Position clickedPositionOnBoard = Board[clickedPosition.getX()][clickedPosition.getY()];
+        Position lastPositionOnBoard = Board[lastPos.getX()][lastPos.getY()];
+        Piece pieceOnClickedPos = clickedPositionOnBoard.getPiece();
+        TextView clickedPositionOnDisplayBoard = DisplayBoard[clickedPosition.getX()][clickedPosition.getY()];
+        TextView lastPositionOnDisplayBoard = DisplayBoard[lastPos.getX()][lastPos.getY()];
+        boolean isNotFriendlyFire = pieceOnClickedPos.isWhite() != WhitePlayerTurn;
 
-        if (!AnythingSelected) {
-
-            if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() == null) {
-                isKingInDanger();
-                return;
-            }else{
-                if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
-                    isKingInDanger();
-                    return;
-                }else{
-                    listOfCoordinates.clear();
-                    listOfCoordinates = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().AllowedMoves(clickedPosition, Board);
-                    DisplayBoardBackground[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.color.colorSelected);
-                    setColorAtAllowedPosition(listOfCoordinates);
-                    AnythingSelected = true;
+        if(AnythingSelected) {
+            if(pieceOnClickedPos == null) {
+                if(tryToMovePiece(lastPositionOnBoard, clickedPositionOnBoard)) {
+                    checkForPawn();
+                    WhitePlayerTurn = !WhitePlayerTurn;
                 }
             }
-        } else {
-            if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() == null){
-                if(moveIsAllowed(listOfCoordinates , clickedPosition)){
+            else {
+                if(isNotFriendlyFire) {
+                    boolean moved = tryToMovePiece(lastPositionOnBoard, clickedPositionOnBoard);
 
-                    saveBoard();
-                    if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() instanceof King){
-                        if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
+                    if(moved) {
+                        if(pieceOnClickedPos instanceof King) {
                             game_over.setVisibility(View.VISIBLE);
                         }
+                        checkForPawn();
                     }
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(Board[lastPos.getX()][lastPos.getY()].getPiece());
-                    Board[lastPos.getX()][lastPos.getY()].setPiece(null);
-
-                    isKingInDanger();
-                    resetColorAtAllowedPosition(listOfCoordinates);
-                    DisplayBoard[lastPos.getX()][lastPos.getY()].setBackgroundResource(0);
-                    resetColorAtLastPosition(lastPos);
-                    AnythingSelected = false;
-                    FirstPlayerTurn = !FirstPlayerTurn;
-                    checkForPawn();
-
-                }else{
-                    resetColorAtLastPosition(lastPos);
-                    resetColorAtAllowedPosition(listOfCoordinates);
-                    AnythingSelected = false;
+                    WhitePlayerTurn = !WhitePlayerTurn;
                 }
-
-            }else{
-                if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() == null) {
-                    isKingInDanger();
+                else {
+                    resetColorsOnMove();
+                    resetAllowedMoves();
                     return;
-
-                }else{
-                    if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() !=null){
-                        if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
-                            if(moveIsAllowed(listOfCoordinates , clickedPosition)){
-
-                                saveBoard();
-                                if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() instanceof King){
-                                    if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
-                                        game_over.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                                Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(Board[lastPos.getX()][lastPos.getY()].getPiece());
-                                Board[lastPos.getX()][lastPos.getY()].setPiece(null);
-
-                                resetColorAtAllowedPosition(listOfCoordinates);
-                                DisplayBoard[lastPos.getX()][lastPos.getY()].setBackgroundResource(0);
-                                resetColorAtLastPosition(lastPos);
-
-                                AnythingSelected = false;
-                                FirstPlayerTurn = !FirstPlayerTurn;
-                                checkForPawn();
-                            }else{
-                                resetColorAtLastPosition(lastPos);
-                                resetColorAtAllowedPosition(listOfCoordinates);
-                                AnythingSelected = false;
-                            }
-
-                        }else{
-                            if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite() != FirstPlayerTurn){
-                                isKingInDanger();
-                                return;
-                            }
-
-                            resetColorAtLastPosition(lastPos);
-                            resetColorAtAllowedPosition(listOfCoordinates);
-
-                            listOfCoordinates.clear();
-                            listOfCoordinates = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().AllowedMoves(clickedPosition, Board);
-                            DisplayBoardBackground[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.color.colorSelected);
-                            setColorAtAllowedPosition(listOfCoordinates);
-                            AnythingSelected = true;
-                        }
-                    }
                 }
+            }
+            AnythingSelected = false;
+        }
+        else {
+            if(pieceOnClickedPos != null) {
+                resetAllowedMoves();
+                AnythingSelected = true;
             }
         }
 
         isKingInDanger();
         lastPos = new Coordinates(clickedPosition.getX(), clickedPosition.getY());
-        setBoard();
+        drawBoard();
     }
 
-    public void saveBoard(){
+    public void resetAllowedMoves() {
+        listOfCoordinates.clear();
+        listOfCoordinates = pieceOnClickedPos.AllowedMoves(clickedPosition, Board);
+        setColorAtPosition(clickedPosition, R.color.colorSelected);
+        setColorAtAllowedPosition(listOfCoordinates);
+    }
+
+    public boolean tryToMovePiece(Position fromPos, Position toPos) {
+        boolean isMoveAllowed = moveIsAllowed(listOfCoordinates, clickedPosition);
+        if(isMoveAllowed) {
+            saveBoard();
+            toPos.setPiece(fromPos.getPiece());
+            fromPos.setPiece(null);
+        }
+
+        resetColorsOnMove();
+        return isMoveAllowed;
+    }
+
+    public void saveBoard() {
         numberOfMoves = 1;
-        LastMoves.add(numberOfMoves-1 ,Board2 );
+        LastMoves.add(numberOfMoves-1, Board2);
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                LastMoves.get(numberOfMoves-1)[i][j] = new Position(null);
-            }
-        }
+        for (int board_row = 0; board_row < 8; board_row++)
+            for (int board_col = 0; board_col < 8; board_col++)
+                LastMoves.get(numberOfMoves-1)[board_row][board_col] = new Position(null);
 
-        for(int g=0;g<8;g++){
-            for(int h=0;h<8;h++){
-                if(Board[g][h].getPiece()==null){
-                    LastMoves.get(numberOfMoves-1)[g][h].setPiece(null);
-                }else{
-                    LastMoves.get(numberOfMoves-1)[g][h].setPiece(Board[g][h].getPiece());
-                }
-            }
-        }
+        for (int board_row = 0; board_row < 8; board_row++)
+            for (int board_col = 0; board_col < 8; board_col++)
+                LastMoves.get(numberOfMoves-1)[board_row][board_col].setPiece(
+                    Board[board_row][board_col].getPiece()
+                );
     }
 
     public void undo(View v){
-        if(numberOfMoves>0) {
+        if(numberOfMoves > 0) {
+            lastMove = LastMoves.get(--numberOfMoves);
+            
+            for(int board_row = 0; board_row < 8; board_row++)
+                for(int board_col = 0; board_col < 8; board_col++)
+                    Board[board_row][board_col].setPiece(
+                        lastMove[board_row][board_col].getPiece()
+                    );
+            
+            drawBoard();
+            for(int board_row = 0; board_row < 8; board_row++)
+                for(int board_col = 0; board_col < 8; board_col++)
+                    resetColorAtPosition(new Coordinates(board_row, board_col);
 
-            for(int g=0;g<8;g++){
-                for(int h=0;h<8;h++){
-                    if(LastMoves.get(numberOfMoves-1)[g][h].getPiece()==null){
-                        Board[g][h].setPiece(null);
-                    }else{
-                        Board[g][h].setPiece(LastMoves.get(numberOfMoves-1)[g][h].getPiece());
-                    }
-                }
-            }
-            numberOfMoves--;
-
-            setBoard();
-            for(int i=0;i<8;i++){
-                for(int j=0;j<8;j++){
-                    if((i+j)%2==0){
-                        DisplayBoardBackground[i][j].setBackgroundResource(R.color.colorBoardDark);
-                    }else{
-                        DisplayBoardBackground[i][j].setBackgroundResource(R.color.colorBoardLight);
-                    }
-                }
-            }
             isKingInDanger();
-            FirstPlayerTurn = !FirstPlayerTurn;
+            WhitePlayerTurn = !WhitePlayerTurn;
             game_over.setVisibility(View.INVISIBLE);
         }
     }
 
     public void pawnChoice(View v){
-        int x = v.getId();
+        int drawable_resource, x = v.getId();
+        Position clickedPositionOnBoard = Board[clickedPosition.getX()][clickedPosition.getY()];
+        TextView clickedPositionOnDisplayBoard = DisplayBoard[clickedPosition.getX()][clickedPosition.getY()];
+        boolean pawnIsWhite = clickedPosition.getY() == 0;
+        
         switch (x){
-            case R.id.pawn_queen :
-                if(clickedPosition.getY() == 0){
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Queen(true));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.wqueen);
-                }else{
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Queen(false));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.bqueen);
-                }
+            case R.id.pawn_queen:
+                clickedPositionOnBoard.setPiece(new Queen(pawnIsWhite));
+                drawable_resource = pawnIsWhite ? R.drawable.wqueen : R.drawable.bqueen;
                 break;
-            case R.id.pawn_rook :
-                if(clickedPosition.getY() == 0){
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Rook(true));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.wrook);
-                }else{
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Rook(false));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.brook);
-                }
+            case R.id.pawn_rook:
+                clickedPositionOnBoard.setPiece(new Rook(pawnIsWhite));
+                drawable_resource = pawnIsWhite ? R.drawable.wrook : R.drawable.brook;
                 break;
-            case R.id.pawn_bishop :
-                if(clickedPosition.getY() == 0){
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Bishop(true));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.wbishop);
-                }else{
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Bishop(false));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.bbishop);
-                }
+            case R.id.pawn_bishop:
+                clickedPositionOnBoard.setPiece(new Bishop(pawnIsWhite));
+                drawable_resource = pawnIsWhite ? R.drawable.wbishop : R.drawable.bbishop;
                 break;
-            case R.id.pawn_knight :
-                if(clickedPosition.getY() == 0){
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Knight(true));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.wknight);
-                }else{
-                    Board[clickedPosition.getX()][clickedPosition.getY()].setPiece(new Knight(false));
-                    DisplayBoard[clickedPosition.getX()][clickedPosition.getY()].setBackgroundResource(R.drawable.bknight);
-
-                }
+            case R.id.pawn_knight:
+                clickedPositionOnBoard.setPiece(new Knight(pawnIsWhite));
+                drawable_resource = pawnIsWhite ? R.drawable.wknight : R.drawable.bknight;
                 break;
         }
+        clickedPositionOnDisplayBoard.setBackgroundResource(drawable_resource);
         pawn_choices.setVisibility(View.INVISIBLE);
     }
 
-    private void resetColorAtAllowedPosition(ArrayList<Coordinates> listOfCoordinates) {
-        for(int i=0; i<listOfCoordinates.size(); i++){
-            if((listOfCoordinates.get(i).getX() + listOfCoordinates.get(i).getY())%2==0){
-                DisplayBoardBackground[listOfCoordinates.get(i).getX()][listOfCoordinates.get(i).getY()].setBackgroundResource(R.color.colorBoardDark);
-            }else {
-                DisplayBoardBackground[listOfCoordinates.get(i).getX()][listOfCoordinates.get(i).getY()].setBackgroundResource(R.color.colorBoardLight);
-            }
-        }
-    }
-
-    void setColorAtAllowedPosition(ArrayList<Coordinates> list){
-
-        for(int i=0; i<list.size(); i++){
-            if(Board[list.get(i).getX()][list.get(i).getY()].getPiece() == null){
-                DisplayBoardBackground[list.get(i).getX()][list.get(i).getY()].setBackgroundResource(R.color.colorPositionAvailable);
-            }else{
-                DisplayBoardBackground[list.get(i).getX()][list.get(i).getY()].setBackgroundResource(R.color.colorDanger);
-            }
-        }
-    }
-
     private boolean moveIsAllowed(ArrayList<Coordinates> piece, Coordinates coordinate) {
-        Boolean Allowed = false;
-        for(int i =0;i<piece.size();i++){
-            if(piece.get(i).getX() == coordinate.getX()  &&  piece.get(i).getY() == coordinate.getY()){
-                Allowed = true;
-                break;
-            }
+        for(Coordinates curPiece: piece) {
+            if(curPiece.getX() == coordinate.getX()  &&  curPiece.getY() == coordinate.getY())
+                return true;
         }
-        return Allowed;
+        return false;
     }
 
-    private void resetColorAtLastPosition(Coordinates lastPos){
-        if((lastPos.getX() + lastPos.getY())%2==0){
-            DisplayBoardBackground[lastPos.getX()][lastPos.getY()].setBackgroundResource(R.color.colorBoardDark);
-        }else {
-            DisplayBoardBackground[lastPos.getX()][lastPos.getY()].setBackgroundResource(R.color.colorBoardLight);
+    // Board Positions Color Setting Begin
+
+    private void setColorAtPosition(Coordinates position, int color_resource_id) {
+        DisplayBoardBackground[position.getX()][position.getY()].setBackgroundResource(color_resource_id);
+    }
+
+    private void resetColorAtPosition(Coordinates position){
+        int board_color_resource = position.sumIsEven() ? R.color.colorBoardDark : R.color.colorBoardLight;
+        setColorAtPosition(position, board_color_resource);
+    }
+
+    void setColorAtAllowedPosition(ArrayList<Coordinates> allowedMoves) {
+        for(Coordinates curPos: allowedMoves) {
+            Piece pieceOnPos = Board[curPos.getX()][curPos.getY()].getPiece();
+
+            int color_resource_id = pieceOnPos == null ? R.color.colorPositionAvailable : R.color.colorDanger;
+            setColorAtPosition(curPos, color_resource_id);
         }
     }
+
+    private void resetColorAtAllowedPosition(ArrayList<Coordinates> allowedMoves) {
+        for(Coordinates curPos: allowedMoves)
+            resetColorAtPosition(curPos);
+    }
+
+    private void resetColorsOnMove() {
+        resetColorAtPosition(lastPos);
+        resetColorAtAllowedPosition(listOfCoordinates);
+    }
+
+    // Board Positions Color Setting End
 
     private void isKingInDanger(){
-        ArrayList<Coordinates> List = new ArrayList<>();
+        for(int board_row = 0; board_row < 8; board_row++) {
+            for(int board_col = 0; board_col < 8; board_col++) {
+                Piece curPieceOnBoard = Board[board_row][board_col].getPiece();
+                
+                if(curPieceOnBoard == null)
+                    continue;
 
-        for(int i=0;i<8;i++){
-            for(int j=0;j<8;j++){
-                if(Board[i][j].getPiece() != null){
-                    List.clear();
-                    Coordinates c = new Coordinates(i,j);
-                    List = Board[i][j].getPiece().AllowedMoves(c,Board);
-                    //Log.i(TAG.toString(), List.toString());
+                ArrayList<Coordinates> CurPieceAllowedMoves = curPieceOnBoard.AllowedMoves(
+                    new Coordinates(board_row, board_col),
+                    Board
+                );
 
-                    for (int x=0;x<List.size();x++){
-                        if(Board[List.get(x).getX()][List.get(x).getY()].getPiece() instanceof King){
+                for (Coordinates allowedMove: CurPieceAllowedMoves) {
+                    Piece pieceOnAllowedMove = Board[allowedMove.getX()][allowedMove.getY()].getPiece();
 
-                            if((List.get(x).getX()+List.get(x).getY())%2==0){
-                                DisplayBoardBackground[List.get(x).getX()][List.get(x).getY()].setBackgroundResource(R.color.colorBoardDark);
-                            }else{
-                                DisplayBoardBackground[List.get(x).getX()][List.get(x).getY()].setBackgroundResource(R.color.colorBoardLight);
-                            }
-                            if(Board[i][j].getPiece().isWhite() != Board[List.get(x).getX()][List.get(x).getY()].getPiece().isWhite()){
-                                DisplayBoardBackground[List.get(x).getX()][List.get(x).getY()].setBackgroundResource(R.color.colorKingInDanger);
-                            }
-                        }
-                    }
+                    if(!(pieceOnAllowedMove instanceof King) || curPieceOnBoard.isFriend(pieceOnAllowedMove))
+                        continue;
+
+                    resetColorAtPosition(allowedMove);
+                    setColorAtPosition(allowedMove, R.color.colorKingInDanger);
+                    return;
                 }
+
             }
         }
     }
 
     private void checkForPawn(){
-        if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece() instanceof Pawn){
-            if(Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().isWhite()){
-                if(clickedPosition.getY() == 0){
-                    pawn_choices.setVisibility(View.VISIBLE);
-                }
-            }else{
-                if(clickedPosition.getY() == 7){
-                    pawn_choices.setVisibility(View.VISIBLE);
-                    pawn_choices.setRotation(180);
-                }
-            }
+        Piece pieceOnClickedPos = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece();
+        
+        if(!(pieceOnClickedPos instanceof Pawn))
+            return;
+
+        boolean pawnIsWhite = pieceOnClickedPos.isWhite();
+        int clickedPositionY = clickedPosition.getY();
+
+        if(pawnIsWhite && clickedPositionY == 0)
+            pawn_choices.setVisibility(View.VISIBLE)
+        else if (!pawnIsWhite && clickedPositionY == 7) {
+            pawn_choices.setVisibility(View.VISIBLE);
+            pawn_choices.setRotation(180);
         }
         isKingInDanger();
     }
