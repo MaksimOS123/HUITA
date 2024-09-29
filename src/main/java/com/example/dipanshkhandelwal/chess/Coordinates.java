@@ -27,6 +27,6 @@ public class Coordinates {
     }
 
     public boolean sumIsEven() {
-        return (x + y) % 2 == 0
+        return (x + y) % 2 == 0;
     }
 }

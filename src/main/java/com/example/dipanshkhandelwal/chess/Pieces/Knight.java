@@ -2,6 +2,7 @@ package com.example.dipanshkhandelwal.chess.Pieces;
 
 import com.example.dipanshkhandelwal.chess.Coordinates;
 import com.example.dipanshkhandelwal.chess.Position;
+import com.example.dipanshkhandelwal.chess.R;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class Knight extends Piece{
 
     @Override
     public int getDrawableResource() {
-        return isWhite() ? R.drawable.wknight : R.drawable.bknight
+        return isWhite() ? R.drawable.wknight : R.drawable.bknight;
     }
 
     @Override

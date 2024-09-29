@@ -24,11 +24,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Class TAG = this.getClass();
     public ArrayList<Coordinates> listOfCoordinates = new ArrayList<>();
+    public ArrayList<Coordinates> listOfApprovedMoves = new ArrayList<>();
     public Position[][] Board = new Position[8][8];
     public Position[][] Board2 = new Position[8][8];
     public Boolean AnythingSelected = false;
-    public Coordinates lastPos = null ;
+    public Coordinates lastPos = new Coordinates(0, 0);
     public Coordinates clickedPosition = new Coordinates(0, 0);
+    public Coordinates lastClickedPosition = new Coordinates(0, 0);
     public TextView game_over;
     public TextView[][] DisplayBoard = new TextView[8][8];
     public TextView[][] DisplayBoardBackground = new TextView[8][8];
@@ -71,12 +73,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Board[4][board_row].setPiece(new King(isWhiteColor));
             Board[5][board_row].setPiece(new Bishop(isWhiteColor));
             Board[6][board_row].setPiece(new Knight(isWhiteColor));
-            Board[7][board_row].setPiece(new Rook(isWhiteColor);
+            Board[7][board_row].setPiece(new Rook(isWhiteColor));
         }
 
-        for(int board_col = 0; board_col < 8; board_col++)
-             Board[board_col][1].setPiece(new Pawn(false);
-             Board[board_col][6].setPiece(new Pawn(true);
+        for(int board_col = 0; board_col < 8; board_col++) {
+             Board[board_col][1].setPiece(new Pawn(false));
+             Board[board_col][6].setPiece(new Pawn(true));
+        }
 
         DisplayBoard[0][0] = (TextView) findViewById(R.id.R00);
         DisplayBoardBackground[0][0] = (TextView) findViewById(R.id.R000);
@@ -505,46 +508,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     
     @Override
     public void onClick(View v) {
-        getClickedPos();
-        
+        getClickedPos(v);
+
+
         Position clickedPositionOnBoard = Board[clickedPosition.getX()][clickedPosition.getY()];
         Position lastPositionOnBoard = Board[lastPos.getX()][lastPos.getY()];
         Piece pieceOnClickedPos = clickedPositionOnBoard.getPiece();
         TextView clickedPositionOnDisplayBoard = DisplayBoard[clickedPosition.getX()][clickedPosition.getY()];
         TextView lastPositionOnDisplayBoard = DisplayBoard[lastPos.getX()][lastPos.getY()];
-        boolean isNotFriendlyFire = pieceOnClickedPos.isWhite() != WhitePlayerTurn;
+        //boolean isNotFriendlyFire = pieceOnClickedPos.isWhite() != WhitePlayerTurn;
 
         if(AnythingSelected) {
             if(pieceOnClickedPos == null) {
                 if(tryToMovePiece(lastPositionOnBoard, clickedPositionOnBoard)) {
                     checkForPawn();
                     WhitePlayerTurn = !WhitePlayerTurn;
+                    AnythingSelected = false;
                 }
             }
             else {
-                if(isNotFriendlyFire) {
+                if(pieceOnClickedPos.isWhite() != WhitePlayerTurn) {
                     boolean moved = tryToMovePiece(lastPositionOnBoard, clickedPositionOnBoard);
 
                     if(moved) {
-                        if(pieceOnClickedPos instanceof King) {
+                        if (pieceOnClickedPos instanceof King) {
                             game_over.setVisibility(View.VISIBLE);
                         }
                         checkForPawn();
+                        WhitePlayerTurn = !WhitePlayerTurn;
+                        AnythingSelected = false;
                     }
-                    WhitePlayerTurn = !WhitePlayerTurn;
                 }
                 else {
+                    resetColorAtPosition(lastPos);
                     resetColorsOnMove();
                     resetAllowedMoves();
-                    return;
                 }
             }
-            AnythingSelected = false;
+
         }
         else {
             if(pieceOnClickedPos != null) {
-                resetAllowedMoves();
-                AnythingSelected = true;
+                if (pieceOnClickedPos.isWhite() == WhitePlayerTurn) {
+                    resetAllowedMoves();
+                    AnythingSelected = true;
+                }
             }
         }
 
@@ -555,13 +563,83 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void resetAllowedMoves() {
         listOfCoordinates.clear();
-        listOfCoordinates = pieceOnClickedPos.AllowedMoves(clickedPosition, Board);
+        listOfCoordinates = Board[clickedPosition.getX()][clickedPosition.getY()].getPiece().AllowedMoves(clickedPosition, Board);
+        listOfApprovedMoves = ApprovingAllowedMoves(clickedPosition, listOfCoordinates);
         setColorAtPosition(clickedPosition, R.color.colorSelected);
-        setColorAtAllowedPosition(listOfCoordinates);
+        setColorAtAllowedPosition(listOfApprovedMoves);
+    }
+
+    public ArrayList<Coordinates> ApprovingAllowedMoves(Coordinates clickedPiece, ArrayList<Coordinates> listOfCoordinates) {
+        int X = clickedPiece.getX();
+        int Y = clickedPiece.getY();
+
+        if (Board[X][Y].getPiece() instanceof King) {
+            ArrayList<Coordinates> List = new ArrayList<>();
+            ArrayList<Coordinates> ListKing = new ArrayList<>(Board[X][Y].getPiece().AllowedMoves(new Coordinates(X, Y), Board));
+
+            for(int i=0;i<8;i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (Board[i][j].getPiece() != null) {
+                        List.clear();
+                        Coordinates c = new Coordinates(i, j);
+                        if (!(Board[i][j].getPiece() instanceof Pawn)) {
+                            List = Board[i][j].getPiece().AllowedMoves(c, Board);
+                            if (Board[i][j].getPiece().isWhite() != Board[X][Y].getPiece().isWhite()) {
+                                for (int x = 0; x < List.size(); x++) {
+                                    int X2 = List.get(x).getX();
+                                    int Y2 = List.get(x).getY();
+
+                                    for (int x2 = 0; x2 < ListKing.size(); x2++) {
+                                        int XKing = ListKing.get(x2).getX();
+                                        int YKing = ListKing.get(x2).getY();
+
+                                        if (X2 == XKing && Y2 == YKing) {
+                                            ListKing.remove(x2);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (Board[i][j].getPiece().isWhite() != Board[X][Y].getPiece().isWhite()) {
+                                if (Board[i][j].getPiece().isWhite()) {
+                                    int SizeOfList = ListKing.size();
+                                    for (int x2 = 0; x2 < SizeOfList; x2++) {
+                                        int XKing = ListKing.get(x2).getX();
+                                        int YKing = ListKing.get(x2).getY();
+
+                                        if ((i-1 == XKing || i+1 == XKing) && j-1 == YKing) {
+                                            ListKing.remove(x2);
+                                            x2--;
+                                            SizeOfList--;
+                                        }
+                                    }
+                                } else {
+                                    int SizeOfList = ListKing.size();
+                                    for (int x2 = 0; x2 < SizeOfList; x2++) {
+                                        int XKing = ListKing.get(x2).getX();
+                                        int YKing = ListKing.get(x2).getY();
+
+                                        if ((i-1 == XKing || i+1 == XKing) && j+1 == YKing) {
+                                            ListKing.remove(x2);
+                                            x2--;
+                                            SizeOfList--;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            return ListKing;
+        }
+        return listOfCoordinates;
     }
 
     public boolean tryToMovePiece(Position fromPos, Position toPos) {
-        boolean isMoveAllowed = moveIsAllowed(listOfCoordinates, clickedPosition);
+        boolean isMoveAllowed = moveIsAllowed(listOfApprovedMoves, clickedPosition);
         if(isMoveAllowed) {
             saveBoard();
             toPos.setPiece(fromPos.getPiece());
@@ -589,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void undo(View v){
         if(numberOfMoves > 0) {
-            lastMove = LastMoves.get(--numberOfMoves);
+            Position[][] lastMove = LastMoves.get(--numberOfMoves);
             
             for(int board_row = 0; board_row < 8; board_row++)
                 for(int board_col = 0; board_col < 8; board_col++)
@@ -600,7 +678,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             drawBoard();
             for(int board_row = 0; board_row < 8; board_row++)
                 for(int board_col = 0; board_col < 8; board_col++)
-                    resetColorAtPosition(new Coordinates(board_row, board_col);
+                    resetColorAtPosition(new Coordinates(board_row, board_col));
 
             isKingInDanger();
             WhitePlayerTurn = !WhitePlayerTurn;
@@ -609,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void pawnChoice(View v){
-        int drawable_resource, x = v.getId();
+        int drawable_resource = 0, x = v.getId();
         Position clickedPositionOnBoard = Board[clickedPosition.getX()][clickedPosition.getY()];
         TextView clickedPositionOnDisplayBoard = DisplayBoard[clickedPosition.getX()][clickedPosition.getY()];
         boolean pawnIsWhite = clickedPosition.getY() == 0;
@@ -671,7 +749,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void resetColorsOnMove() {
         resetColorAtPosition(lastPos);
-        resetColorAtAllowedPosition(listOfCoordinates);
+        resetColorAtAllowedPosition(listOfApprovedMoves);
     }
 
     // Board Positions Color Setting End
@@ -688,14 +766,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new Coordinates(board_row, board_col),
                     Board
                 );
-
+                if (curPieceOnBoard instanceof King)
+                    resetColorAtPosition(new Coordinates(board_row, board_col));
                 for (Coordinates allowedMove: CurPieceAllowedMoves) {
                     Piece pieceOnAllowedMove = Board[allowedMove.getX()][allowedMove.getY()].getPiece();
 
-                    if(!(pieceOnAllowedMove instanceof King) || curPieceOnBoard.isFriend(pieceOnAllowedMove))
+                    if(!(pieceOnAllowedMove instanceof King) || curPieceOnBoard.isFriend(pieceOnAllowedMove)){
                         continue;
+                    }
 
-                    resetColorAtPosition(allowedMove);
+
+                    //resetColorAtPosition(allowedMove);
                     setColorAtPosition(allowedMove, R.color.colorKingInDanger);
                     return;
                 }
@@ -714,7 +795,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int clickedPositionY = clickedPosition.getY();
 
         if(pawnIsWhite && clickedPositionY == 0)
-            pawn_choices.setVisibility(View.VISIBLE)
+            pawn_choices.setVisibility(View.VISIBLE);
         else if (!pawnIsWhite && clickedPositionY == 7) {
             pawn_choices.setVisibility(View.VISIBLE);
             pawn_choices.setRotation(180);
